@@ -1,0 +1,48 @@
+:root {
+  /* NEW Orange Color Scheme */
+  /*
+  --primary-color: #ff6b35;      /* Vibrant Orange */
+  /* --secondary-color: #f7931e;    Golden Orange */
+  /* --accent-color: #ff8c42;       Light Orange */
+  /* --dark-accent: #c44900;        Dark Orange */
+  --success-green: #10a37f;      /* Keep green for success messages*/
+  
+
+  /* Alternative Orange Scheme (choose one) */
+  
+  --primary-color: #e67e22;      /*Deep Orange*/
+  --secondary-color: #ff6f00;    /*Amber Orange*/  
+  --accent-color: navy;       /*Light Orange*/
+  --dark-accent: #e64a19;        /*Dark Orange Red*/
+  
+  
+  /* Text colors */
+  --text-color: #2c3e50;
+  --text-light: #3a4c5d;
+  --text-white: #ffffff;
+  
+  /* Background colors */
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --bg-dark: #1a1a1a;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  
+  /* Border radius - Your unique style! */
+  --radius-sm: 8px 0 8px 0;
+  --radius-md: 12px 0 12px 0;
+  --radius-lg: 16px 0 16px 0;
+  
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Transitions */
+  --transition: all 0.3s ease;
+}

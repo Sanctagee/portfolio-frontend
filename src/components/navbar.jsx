@@ -16,7 +16,12 @@ function Navbar() {
         <div className="nav-content">
           {/* Logo */}
           <Link to="/" className="logo">
-            <h2>Gabriel Nwofoke</h2>
+            <img 
+              src="/images/favicon.png" 
+              alt="GCN Logo" 
+              className="logo-favicon"
+            />
+            <span className="logo-text">Gabriel Nwofoke</span>
           </Link>
 
           {/* Desktop Menu */}

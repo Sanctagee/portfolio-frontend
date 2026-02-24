@@ -1,52 +1,33 @@
-import { createContext, useState, useContext, useEffect } from "react"
-import { authAPI } from "../services/api"
+import { createContext, useContext, useState } from "react"
 
-export const AuthContext = createContext()
+const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
-  const [admin, setAdmin] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [admin, setAdmin] = useState(
+    JSON.parse(localStorage.getItem("admin")) || null
+  )
 
-  // Check if already logged in when app loads
-  useEffect(() => {
-    const verifyLogin = async () => {
-      try {
-        const response = await authAPI.verify()
-        if (response.data.success) {
-          setAdmin(response.data.admin)
-        }
-      } catch (error) {
-        setAdmin(null)
-      } finally {
-        setLoading(false)
-      }
-    }
-    verifyLogin()
-  }, [])
-
-  const login = (adminData) => {
+  const login = (adminData, token) => {
+    localStorage.setItem("admin", JSON.stringify(adminData))
+    localStorage.setItem("token", token)
     setAdmin(adminData)
   }
 
-  const logout = async () => {
-    try {
-      await authAPI.logout()
-    } catch (error) {
-      console.error("Logout error:", error)
-    } finally {
-      setAdmin(null)
-      localStorage.removeItem("adminToken")
-    }
+  const logout = () => {
+    localStorage.removeItem("admin")
+    localStorage.removeItem("token")
+    setAdmin(null)
   }
 
+  const isAuthenticated = !!admin
+
   return (
-    <AuthContext.Provider value={{ admin, login, logout, loading }}>
+    <AuthContext.Provider value={{ admin, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-// Custom hook for easy access
 export function useAuth() {
   return useContext(AuthContext)
 }

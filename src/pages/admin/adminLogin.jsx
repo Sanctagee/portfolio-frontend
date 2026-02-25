@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/authContext"
-import { authAPI } from "../../api/api"
+import { authAPI } from "../../api" 
 import "../../styles/admin/adminLogin.css"
 
 function AdminLogin() {
@@ -43,7 +43,6 @@ function AdminLogin() {
 
   return (
     <div className="admin-login-page">
-
       {/* Animated SVG Background */}
       <div className="login-bg">
         <svg className="login-svg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +88,6 @@ function AdminLogin() {
 
       {/* Login Card */}
       <div className="login-card">
-
         <div className="login-brand">
           <div className="login-logo">GN</div>
           <h1>Admin Portal</h1>
@@ -103,7 +101,6 @@ function AdminLogin() {
         )}
 
         <form onSubmit={handleSubmit} className="login-form">
-
           <div className="login-field">
             <label htmlFor="admin_email">Email Address</label>
             <div className="input-wrapper">
@@ -146,13 +143,11 @@ function AdminLogin() {
           >
             {loading ? "Signing in..." : "Sign In →"}
           </button>
-
         </form>
 
         <a href="/" className="login-back">
           ← Back to Portfolio
         </a>
-
       </div>
     </div>
   )

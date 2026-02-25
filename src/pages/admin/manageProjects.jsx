@@ -9,7 +9,7 @@ const emptyForm = {
   project_tech: "",
   project_url: "",
   project_github: "",
-  project_image: "",
+  project_image: "", // Will store the URL after upload
   is_featured: false,
 }
 
@@ -22,6 +22,11 @@ function ManageProjects() {
   const [saving, setSaving] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState(null)
   const [feedback, setFeedback] = useState(null) // { type: 'success'|'error', msg }
+  
+  // New state for image upload
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
+  const [uploadProgress, setUploadProgress] = useState(false)
 
   useEffect(() => {
     fetchProjects()
@@ -51,6 +56,42 @@ function ManageProjects() {
     }))
   }
 
+  // New function to handle file selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      // Check file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showFeedback("error", "Image must be less than 5MB")
+        return
+      }
+      
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        showFeedback("error", "Please select an image file")
+        return
+      }
+      
+      setImageFile(file)
+      
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file)
+      setImagePreview(previewUrl)
+      
+      // Clear any existing image URL in formData since we're uploading a file
+      setFormData(prev => ({ ...prev, project_image: "" }))
+    }
+  }
+
+  // Clear selected image
+  const handleClearImage = () => {
+    setImageFile(null)
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview) // Clean up preview URL
+      setImagePreview(null)
+    }
+  }
+
   const handleEdit = (project) => {
     setFormData({
       project_title: project.project_title || "",
@@ -63,6 +104,11 @@ function ManageProjects() {
     })
     setEditingId(project.project_id)
     setShowForm(true)
+    
+    // Clear any existing file selection
+    setImageFile(null)
+    setImagePreview(null)
+    
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
@@ -70,19 +116,63 @@ function ManageProjects() {
     setFormData(emptyForm)
     setEditingId(null)
     setShowForm(false)
+    handleClearImage() // Clear image preview
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
+    setUploadProgress(true)
+    
     try {
+      // Create FormData object for file upload
+      const formDataToSend = new FormData()
+      
+      // Append all form fields
+      formDataToSend.append('project_title', formData.project_title)
+      formDataToSend.append('project_description', formData.project_description)
+      formDataToSend.append('project_tech', formData.project_tech)
+      formDataToSend.append('project_url', formData.project_url || '')
+      formDataToSend.append('project_github', formData.project_github || '')
+      formDataToSend.append('is_featured', formData.is_featured)
+      
+      // If there's an image file, append it
+      if (imageFile) {
+        formDataToSend.append('project_image', imageFile)
+      } else if (formData.project_image) {
+        // If no new file but there's an existing image URL, send that too
+        formDataToSend.append('project_image_url', formData.project_image)
+      }
+      
+      let response
       if (editingId) {
-        await projectsAPI.update(editingId, formData)
+        // For update, we need to use a custom fetch or modify your API
+        // Since your projectsAPI.update might not support FormData yet
+        response = await fetch(`${import.meta.env.VITE_API_URL}/projects/${editingId}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            // Don't set Content-Type here - browser will set it with boundary
+          },
+          body: formDataToSend
+        })
+        
+        if (!response.ok) throw new Error('Update failed')
         showFeedback("success", "Project updated successfully!")
       } else {
-        await projectsAPI.add(formData)
+        // For add
+        response = await fetch(`${import.meta.env.VITE_API_URL}/projects`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: formDataToSend
+        })
+        
+        if (!response.ok) throw new Error('Add failed')
         showFeedback("success", "Project added successfully!")
       }
+      
       handleCancel()
       fetchProjects()
     } catch (err) {
@@ -90,6 +180,7 @@ function ManageProjects() {
       showFeedback("error", "Something went wrong. Please try again.")
     } finally {
       setSaving(false)
+      setUploadProgress(false)
     }
   }
 
@@ -135,7 +226,7 @@ function ManageProjects() {
         {showForm && (
           <div className="project-form-card">
             <h2>{editingId ? "Edit Project" : "Add New Project"}</h2>
-            <form onSubmit={handleSubmit} className="project-form">
+            <form onSubmit={handleSubmit} className="project-form" encType="multipart/form-data">
 
               <div className="form-row-2">
                 <div className="form-group">
@@ -197,15 +288,64 @@ function ManageProjects() {
                 </div>
               </div>
 
-              <div className="form-group">
-                <label>Image URL</label>
-                <input
-                  type="url"
-                  name="project_image"
-                  value={formData.project_image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/project-screenshot.jpg"
-                />
+              {/* Image Upload Section - NEW */}
+              <div className="form-group image-upload-group">
+                <label>Project Image</label>
+                
+                {/* Image Preview */}
+                {(imagePreview || formData.project_image) && (
+                  <div className="image-preview-container">
+                    <img 
+                      src={imagePreview || formData.project_image} 
+                      alt="Preview" 
+                      className="image-preview"
+                    />
+                    <button 
+                      type="button" 
+                      className="remove-image-btn"
+                      onClick={handleClearImage}
+                    >
+                      ✕ Remove
+                    </button>
+                  </div>
+                )}
+                
+                {/* Upload Options */}
+                <div className="upload-options">
+                  <div className="upload-option">
+                    <label className="upload-label">
+                      <span>📁 Upload File</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="file-input"
+                      />
+                    </label>
+                    <span className="or-divider">or</span>
+                  </div>
+                  
+                  <div className="url-option">
+                    <input
+                      type="url"
+                      name="project_image"
+                      value={formData.project_image}
+                      onChange={handleChange}
+                      placeholder="https://example.com/image.jpg"
+                      disabled={imageFile !== null} // Disable if file is selected
+                    />
+                    <small>Paste image URL (if no file upload)</small>
+                  </div>
+                </div>
+                
+                {uploadProgress && (
+                  <div className="upload-progress">
+                    <div className="progress-bar">
+                      <div className="progress-fill"></div>
+                    </div>
+                    <span>Uploading...</span>
+                  </div>
+                )}
               </div>
 
               <div className="form-checkbox">
@@ -255,6 +395,7 @@ function ManageProjects() {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th>Image</th> 
                   <th>Project</th>
                   <th>Tech Stack</th>
                   <th>Featured</th>
@@ -266,6 +407,19 @@ function ManageProjects() {
                 {projects.map((project) => (
                   <tr key={project.project_id}>
                     <td>
+                      <div className="table-project-image">
+                        {project.project_image ? (
+                          <img 
+                            src={project.project_image} 
+                            alt={project.project_title}
+                            className="project-thumbnail"
+                          />
+                        ) : (
+                          <div className="no-image">📷</div>
+                        )}
+                      </div>
+                    </td>
+                    <td>
                       <div className="table-project-name">
                         {project.project_title}
                       </div>
@@ -275,9 +429,12 @@ function ManageProjects() {
                     </td>
                     <td>
                       <div className="tech-chips">
-                        {project.project_tech?.split(",").slice(0, 3).map((t) => (
-                          <span key={t.trim()} className="tech-chip">{t.trim()}</span>
+                        {project.project_tech?.split(",").slice(0, 3).map((t, i) => (
+                          <span key={i} className="tech-chip">{t.trim()}</span>
                         ))}
+                        {project.project_tech?.split(",").length > 3 && (
+                          <span className="tech-chip more">+{project.project_tech.split(",").length - 3}</span>
+                        )}
                       </div>
                     </td>
                     <td>
@@ -295,6 +452,7 @@ function ManageProjects() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="table-link"
+                            title="Live Demo"
                           >
                             🔗
                           </a>
@@ -305,6 +463,7 @@ function ManageProjects() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="table-link"
+                            title="GitHub Repository"
                           >
                             🐙
                           </a>

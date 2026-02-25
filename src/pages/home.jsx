@@ -185,31 +185,35 @@ function Home() {
           ) : (
             <div className="grid grid-3">
               {projects.map((project) => (
-                <div key={project.project_id} className="card project-card">
-                  {project.project_image && (
-                    <img
-                      src={project.project_image}
-                      alt={project.project_title}
-                      className="project-image"
-                    />
+              <div key={project.project_id} className="card project-card">
+                {project.project_image && (
+                  <img
+                    src={project.project_image}
+                    alt={project.project_title}
+                    className="project-image"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/images/placeholder.jpg';
+                    }}
+                  />
+                )}
+                <h3>{project.project_title}</h3>
+                <p>{project.project_description}</p>
+                <p className="project-tech-tag">{project.project_tech}</p>
+                <div className="hero-buttons mt-1">
+                  {project.project_url && (
+                    <a href={project.project_url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                      Live Demo
+                    </a>
                   )}
-                  <h3>{project.project_title}</h3>
-                  <p>{project.project_description}</p>
-                  <p className="project-tech-tag">{project.project_tech}</p>
-                  <div className="hero-buttons mt-1">
-                    {project.project_url && (
-                      <a href={project.project_url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                        Live Demo
-                      </a>
-                    )}
-                    {project.project_github && (
-                      <a href={project.project_github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                        GitHub
-                      </a>
-                    )}
-                  </div>
+                  {project.project_github && (
+                    <a href={project.project_github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                      GitHub
+                    </a>
+                  )}
                 </div>
-              ))}
+              </div>
+            ))}
             </div>
           )}
 

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/authContext"
-import { authAPI } from "../../api" 
+import { authAPI } from "../../services/api" 
 import "../../styles/admin/adminLogin.css"
 
 function AdminLogin() {

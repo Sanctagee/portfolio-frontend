@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/authContext"
-import axios from "axios"
+import { authAPI } from "../../api/api"
 import "../../styles/admin/adminLogin.css"
 
 function AdminLogin() {
@@ -25,11 +25,7 @@ function AdminLogin() {
     setError(null)
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        formData,
-        { withCredentials: true }
-      )
+      const res = await authAPI.login(formData)
 
       if (res.data.success) {
         login(res.data.admin, res.data.token)
@@ -51,7 +47,6 @@ function AdminLogin() {
       {/* Animated SVG Background */}
       <div className="login-bg">
         <svg className="login-svg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-          {/* Animated rings */}
           <circle cx="150" cy="150" r="80" fill="none" stroke="rgba(230,126,34,0.15)" strokeWidth="1.5">
             <animateTransform attributeName="transform" type="rotate"
               from="0 150 150" to="360 150 150" dur="20s" repeatCount="indefinite" />
@@ -60,7 +55,6 @@ function AdminLogin() {
             <animateTransform attributeName="transform" type="rotate"
               from="360 150 150" to="0 150 150" dur="30s" repeatCount="indefinite" />
           </circle>
-
           <circle cx="650" cy="450" r="100" fill="none" stroke="rgba(255,111,0,0.12)" strokeWidth="1.5">
             <animateTransform attributeName="transform" type="rotate"
               from="0 650 450" to="360 650 450" dur="25s" repeatCount="indefinite" />
@@ -69,8 +63,6 @@ function AdminLogin() {
             <animateTransform attributeName="transform" type="rotate"
               from="360 650 450" to="0 650 450" dur="18s" repeatCount="indefinite" />
           </circle>
-
-          {/* Floating dots */}
           <circle cx="400" cy="80" r="3" fill="rgba(230,126,34,0.4)">
             <animate attributeName="cy" values="80;60;80" dur="4s" repeatCount="indefinite" />
             <animate attributeName="opacity" values="0.4;1;0.4" dur="4s" repeatCount="indefinite" />
@@ -86,12 +78,8 @@ function AdminLogin() {
           <circle cx="500" cy="500" r="3" fill="rgba(255,111,0,0.35)">
             <animate attributeName="cy" values="500;480;500" dur="3.5s" repeatCount="indefinite" />
           </circle>
-
-          {/* Grid lines - subtle tech feel */}
           <line x1="0" y1="300" x2="800" y2="300" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
           <line x1="400" y1="0" x2="400" y2="600" stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-
-          {/* Corner brackets */}
           <path d="M 30 30 L 30 70 M 30 30 L 70 30" stroke="rgba(230,126,34,0.25)" strokeWidth="2" fill="none" />
           <path d="M 770 30 L 770 70 M 770 30 L 730 30" stroke="rgba(230,126,34,0.25)" strokeWidth="2" fill="none" />
           <path d="M 30 570 L 30 530 M 30 570 L 70 570" stroke="rgba(230,126,34,0.25)" strokeWidth="2" fill="none" />

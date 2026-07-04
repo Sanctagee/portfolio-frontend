@@ -83,9 +83,9 @@ function About() {
   ]
 
   const skills = [
-    { category: "Frontend", items: ["React", "JavaScript (ES6+)", "HTML5", "CSS3"] },
-    { category: "Backend", items: ["Node.js", "Express", "Django", "REST APIs"] },
-    { category: "Database", items: ["PostgreSQL", "SQL"] },
+    { category: "Frontend", items: ["React", "JavaScript (ES6+)", "HTML5", "CSS3", "Tailwind CSS"] },
+    { category: "Backend", items: ["Node.js", "Express", "Django REST Framework", "REST APIs"] },
+    { category: "Database", items: ["PostgreSQL", "MongoDB", "SQL"] },
     { category: "Other", items: ["Git", "Vercel", "Render", "C#", "Python", "OOP"] },
   ]
 

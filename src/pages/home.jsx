@@ -10,7 +10,7 @@ function Home() {
   const [error, setError] = useState(null)
   const [typedText, setTypedText] = useState("")
 
-  const roles = ["Full-Stack Developer", "React Developer", "Node.js Developer", "PostgreSQL Developer"]
+  const roles = ["Full-Stack Developer", "React Developer", "Node.js Developer", "PostgreSQL & MongoDB Developer"]
 
   useEffect(() => {
     let roleIndex = 0
@@ -85,8 +85,8 @@ function Home() {
             </h2>
             <p className="hero-description">
               I build modern, scalable web applications using React, Node.js,
-              and PostgreSQL. Passionate about clean code, great user experiences,
-              and continuous learning.
+              Django REST Framework, PostgreSQL, and MongoDB. Passionate about
+              clean code, great user experiences, and continuous learning.
             </p>
             <div className="hero-stats">
               <div className="stat">

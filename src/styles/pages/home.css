@@ -270,6 +270,32 @@
   background: var(--bg-white);
 }
 
+/* Grid spacing between project cards */
+.featured-projects .grid-3 {
+  gap: 2rem;
+}
+
+/* Card breathing room: this was the missing piece — the card
+   had no internal padding, so image/title/text/buttons were all
+   flush against the card edges and each other. */
+.featured-projects .project-card {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured-projects .project-card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.featured-projects .project-card p {
+  color: #666;
+  line-height: 2;
+  margin-bottom: 0.75rem;
+  text-align: justify;
+}
+
+
 .project-image {
   width: 100%;
   height: 180px;
@@ -283,6 +309,11 @@
   color: var(--accent-color);
   font-weight: 600;
   margin-bottom: 0.75rem;
+}
+
+.featured-projects .project-card .hero-buttons {
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 /* ========================

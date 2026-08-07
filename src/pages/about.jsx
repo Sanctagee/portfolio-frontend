@@ -49,7 +49,7 @@ function About() {
       degree: "B.Sc Software Development (In Progress)",
       school: "Brigham Young University – Idaho (Online)",
       period: "2024 – Present",
-      detail: "GPA: 3.8/4.0 · Completed Block 1 (2026) · Currently in Block 2: Web Services",
+      detail: "GPA: 3.4/4.0 · Enrolled through BYU-Pathway Worldwide",
       icon: "🎓",
     },
     {
@@ -71,6 +71,7 @@ function About() {
   ]
 
   const certifications = [
+    { name: "Web and Computer Programming Certificate", issuer: "BYU-Pathway Worldwide", period: "2025" },
     { name: "Basic Python Programming", issuer: "ShieldedBit", period: "Oct 2023 – Jun 2024" },
     { name: "PathwayConnect Certificate", issuer: "BYU-Pathway Worldwide", period: "Sep 2024 – Jun 2025" },
   ]
@@ -112,44 +113,47 @@ function About() {
                 className="bio-photo"
               />
             </div>
+            <div className="bio-photo-decoration"></div>
           </div>
 
           <div className="bio-content">
             <h2>Gabriel Chikwendu Nwofoke</h2>
-            <p className="bio-tag">Full-Stack Developer · Tech Instructor · Ebonyi, Nigeria</p>
+            <p className="bio-tag">Full-Stack Developer · Tech Instructor</p>
 
             <p>
-              I started as a frontend developer, fascinated by the intersection of design and code. 
-              Over time, curiosity drove me deeper — into backend systems, databases, and 
-              full-stack architecture. Today I build complete web applications from the database 
-              all the way to the user interface.
+              Teaching is where I do my clearest thinking. As a tech instructor at
+              CodeWithGabbyTech Academy and Edenites Technologies, I've walked
+              hundreds of students from their first line of HTML to building real
+              projects - and every student I teach makes me a sharper developer,
+              because you can't explain what you don't truly understand.
             </p>
             <p>
-              At <strong>Edenites Technologies</strong>, I led frontend development for an 
-              e-learning platform serving thousands of users, achieving a 40% performance 
-              improvement and 95%+ Lighthouse accessibility scores. I also mentor junior 
-              developers and teach web development to students — because I believe the best 
-              way to master something is to teach it.
+              That same teaching instinct shapes how I build. At{" "}
+              <strong>Edenites Technologies</strong>, I led frontend development for
+              an e-learning platform serving thousands of users, achieving a 40%
+              performance improvement and 95%+ Lighthouse accessibility scores -
+              while mentoring junior developers along the way. Today I build
+              complete web applications end-to-end, from React and Node.js on the
+              frontend and backend to PostgreSQL and MongoDB underneath.
             </p>
             <p>
-              I'm currently pursuing a B.Sc in Software Development at <strong>BYU–Idaho</strong> 
-              (GPA: 3.8) while working and building projects. My background in philosophy and 
-              theology gives me a unique perspective — I approach engineering with clarity, 
-              structured thinking, and a deep sense of responsibility to the people I build for.
+              I'm currently pursuing a B.Sc in Software Development at{" "}
+              <strong>BYU–Idaho</strong> through BYU-Pathway Worldwide, balancing
+              coursework with running my own teaching operation and shipping
+              client projects. My background in philosophy and theology still
+              shows up in how I approach engineering - with clarity, structured
+              thinking, and a deep sense of responsibility to the people I build
+              and teach for.
             </p>
 
             <div className="bio-highlights">
-              <div className="highlight">
-                <span className="highlight-icon">📍</span>
-                <span>Ebonyi, Nigeria</span>
-              </div>
               <div className="highlight">
                 <span className="highlight-icon">💼</span>
                 <span>Open to Remote Roles</span>
               </div>
               <div className="highlight">
-                <span className="highlight-icon">⏱️</span>
-                <span>Available in 2 Weeks</span>
+                <span className="highlight-icon">🧑‍🏫</span>
+                <span>Tech Instructor</span>
               </div>
               <div className="highlight">
                 <span className="highlight-icon">🎓</span>
@@ -167,7 +171,7 @@ function About() {
                 Download CV
               </a>
               <a
-                href="https://github.com/sanctagee"
+                href="https://github.com/Sanctagee"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline-dark"

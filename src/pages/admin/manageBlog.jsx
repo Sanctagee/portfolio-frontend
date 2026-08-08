@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import ReactQuill from "react-quill-new"
+import "react-quill-new/dist/quill.snow.css"
 import AdminLayout from "../../components/admin/adminLayout"
 import { blogAPI } from "../../services/api"
 import "../../styles/admin/manageBlog.css"
@@ -10,6 +12,33 @@ const emptyForm = {
   blog_image: "",
   blog_published: false,
 }
+
+// Toolbar: headings, bold/italic/underline/strike, alignment
+// (this is your "justify" control — Quill's align dropdown includes it),
+// lists, blockquote, link, and a "clean formatting" eraser.
+const quillModules = {
+  toolbar: [
+    [{ header: [2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ align: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "link"],
+    ["clean"],
+  ],
+}
+
+const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "align",
+  "list",
+  "bullet",
+  "blockquote",
+  "link",
+]
 
 function ManageBlog() {
   const [blogs, setBlogs] = useState([])
@@ -47,6 +76,11 @@ function ManageBlog() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }))
+  }
+
+  // Quill gives back HTML directly via its own onChange, not an event object
+  const handleContentChange = (html) => {
+    setFormData((prev) => ({ ...prev, blog_content: html }))
   }
 
   const handleEdit = (blog) => {
@@ -102,6 +136,11 @@ function ManageBlog() {
   }
 
   const publishedCount = blogs.filter((b) => b.blog_published).length
+
+  // Strip HTML tags before counting characters/words, so the
+  // read-time estimate reflects actual text, not markup
+  const plainContent = formData.blog_content.replace(/<[^>]+>/g, " ").trim()
+  const wordCount = plainContent.split(/\s+/).filter(Boolean).length
 
   return (
     <AdminLayout>
@@ -185,18 +224,18 @@ function ManageBlog() {
 
               <div className="form-group">
                 <label>Content *</label>
-                <textarea
-                  name="blog_content"
+                <ReactQuill
+                  theme="snow"
                   value={formData.blog_content}
-                  onChange={handleChange}
+                  onChange={handleContentChange}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  className="content-quill"
                   placeholder="Write your full blog post content here..."
-                  rows={12}
-                  className="content-textarea"
-                  required
                 />
                 <small>
-                  {formData.blog_content.length} characters ·{" "}
-                  ~{Math.ceil(formData.blog_content.split(" ").filter(Boolean).length / 200)} min read
+                  {plainContent.length} characters · ~
+                  {Math.ceil(wordCount / 200) || 1} min read
                 </small>
               </div>
 
@@ -282,12 +321,19 @@ function ManageBlog() {
                       )}
                     </td>
                     <td>
-                      {/* correct column: blog_date (not created_at) */}
                       <span className="table-date">
                         {blog.blog_date
                           ? new Date(blog.blog_date).toLocaleDateString()
                           : "—"}
                       </span>
+                      {blog.blog_updated_at &&
+                        blog.blog_date &&
+                        new Date(blog.blog_updated_at).toDateString() !==
+                          new Date(blog.blog_date).toDateString() && (
+                          <div className="table-updated-date">
+                            Updated {new Date(blog.blog_updated_at).toLocaleDateString()}
+                          </div>
+                        )}
                     </td>
                     <td>
                       <div className="table-actions">

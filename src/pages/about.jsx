@@ -108,7 +108,7 @@ function About() {
           <div className="bio-photo-wrapper">
             <div className="bio-photo-frame">
               <img
-                src="/images/gabby.jpg"
+                src="/images/gabbytech.png"
                 alt="Gabriel Chikwendu Nwofoke"
                 className="bio-photo"
               />

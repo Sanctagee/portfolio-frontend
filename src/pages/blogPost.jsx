@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, Link, useNavigate } from "react-router-dom"
+import DOMPurify from "dompurify"
 import { blogAPI } from "../services/api"
 import '../styles/pages/blogPost.css'
 
@@ -38,12 +39,23 @@ function BlogPost() {
     })
   }
 
+  // blog_content is now HTML from the rich text editor, so read time
+  // is estimated off the stripped text, not the raw markup
   const readTime = (content) => {
     if (!content) return "1 min read"
-    const words = content.trim().split(/\s+/).length
+    const plainText = content.replace(/<[^>]+>/g, " ")
+    const words = plainText.trim().split(/\s+/).filter(Boolean).length
     const mins = Math.ceil(words / 200)
     return `${mins} min read`
   }
+
+  // Was this post edited after it was first published? Compare by day
+  // so a same-day save right after publishing doesn't show as "updated"
+  const wasUpdated =
+    post?.blog_updated_at &&
+    post?.blog_date &&
+    new Date(post.blog_updated_at).toDateString() !==
+      new Date(post.blog_date).toDateString()
 
   if (loading) {
     return (
@@ -109,22 +121,27 @@ function BlogPost() {
               <span>⏱️ {readTime(post.blog_content)}</span>
               <span className="meta-divider">·</span>
               <span>✍️ Gabriel Nwofoke</span>
+              {wasUpdated && (
+                <>
+                  <span className="meta-divider">·</span>
+                  <span>🔄 Updated {formatDate(post.blog_updated_at)}</span>
+                </>
+              )}
             </div>
           </header>
 
           {/* Divider */}
           <div className="post-divider" />
 
-          {/* Post Content */}
-          <div className="post-content">
-            {post.blog_content?.split("\n").map((paragraph, i) =>
-              paragraph.trim() ? (
-                <p key={i}>{paragraph}</p>
-              ) : (
-                <br key={i} />
-              )
-            )}
-          </div>
+          {/* Post Content — rendered as sanitized HTML from the rich
+              text editor. DOMPurify strips anything that could execute
+              (scripts, event handlers) before it ever hits the DOM. */}
+          <div
+            className="post-content"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(post.blog_content || ""),
+            }}
+          />
 
           {/* Post Footer */}
           <div className="post-footer">

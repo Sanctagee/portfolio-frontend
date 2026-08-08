@@ -108,7 +108,7 @@
 /* ================================
    POST CONTENT
    ================================ */
-
+/* 
 .post-content {
   background: white;
   border-radius: var(--radius-lg);
@@ -127,7 +127,28 @@
 
 .post-content p:last-child {
   margin-bottom: 0;
+} */
+
+.post-content h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; }
+
+.post-content h3 { font-size: 1.2rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+
+.post-content p { margin-bottom: 1rem; line-height: 1.8; }
+
+.post-content ul, .post-content ol { margin: 0 0 1rem 1.5rem; }
+
+.post-content li { margin-bottom: 0.4rem; line-height: 1.7; }
+
+.post-content blockquote {
+  border-left: 4px solid var(--primary-color);
+  padding: 0.5rem 0 0.5rem 1.25rem;
+  margin: 1.5rem 0;
+  color: #555;
+  font-style: italic;
 }
+.post-content a { color: var(--primary-color); text-decoration: underline; }
+
+.post-content strong { font-weight: 700; }
 
 /* ================================
    POST FOOTER

@@ -9,7 +9,6 @@ function ViewMessages() {
   const [selectedMsg, setSelectedMsg] = useState(null)
   const [filter, setFilter] = useState("all")
   const [deleteConfirm, setDeleteConfirm] = useState(null)
-  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     fetchMessages()
@@ -56,19 +55,6 @@ function ViewMessages() {
     setSelectedMsg(msg)
     if (!msg.contact_read) {
       handleMarkRead(msg.contact_id)
-    }
-  }
-
-  // Fallback for when mailto: links don't work (no default mail app
-  // configured, sketchy third-party "mail" apps hijacking the handler,
-  // etc.) — just copy the address so it can be pasted anywhere.
-  const handleCopyEmail = async (email) => {
-    try {
-      await navigator.clipboard.writeText(email)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
-      console.error("Clipboard copy failed:", err)
     }
   }
 
@@ -182,12 +168,6 @@ function ViewMessages() {
                   >
                     📧 Reply
                   </a>
-                  <button
-                    className="admin-btn admin-btn-secondary"
-                    onClick={() => handleCopyEmail(selectedMsg.contact_email)}
-                  >
-                    {copied ? "✅ Copied!" : "📋 Copy Email"}
-                  </button>
                   {!selectedMsg.contact_read && (
                     <button
                       className="admin-btn admin-btn-secondary"

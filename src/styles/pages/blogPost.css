@@ -5,6 +5,7 @@
 .blog-post-page {
   min-height: 100vh;
   background: #f8f9fa;
+  overflow-x: hidden; /* safety net: nothing on this page can force horizontal scroll */
 }
 
 /* ================================
@@ -108,7 +109,7 @@
 /* ================================
    POST CONTENT
    ================================ */
-/* 
+
 .post-content {
   background: white;
   border-radius: var(--radius-lg);
@@ -116,28 +117,43 @@
   box-shadow: var(--shadow-sm);
   margin-bottom: 2.5rem;
   line-height: 1.85;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.post-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem;
+}
+
+.post-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
 }
 
 .post-content p {
   font-size: 1.05rem;
   color: #334155;
-  margin-bottom: 1.25rem;
+  margin: 0 0 1.25rem;
   line-height: 1.85;
 }
 
 .post-content p:last-child {
   margin-bottom: 0;
-} */
+}
 
-.post-content h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; }
+.post-content ul,
+.post-content ol {
+  margin: 0 0 1.25rem 1.5rem;
+}
 
-.post-content h3 { font-size: 1.2rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
-
-.post-content p { margin-bottom: 1rem; line-height: 1.8; }
-
-.post-content ul, .post-content ol { margin: 0 0 1rem 1.5rem; }
-
-.post-content li { margin-bottom: 0.4rem; line-height: 1.7; }
+.post-content li {
+  margin-bottom: 0.4rem;
+  line-height: 1.7;
+  color: #334155;
+}
 
 .post-content blockquote {
   border-left: 4px solid var(--primary-color);
@@ -146,9 +162,38 @@
   color: #555;
   font-style: italic;
 }
-.post-content a { color: var(--primary-color); text-decoration: underline; }
 
-.post-content strong { font-weight: 700; }
+.post-content a {
+  color: var(--primary-color);
+  text-decoration: underline;
+  word-break: break-word; /* long pasted URLs won't force overflow */
+}
+
+.post-content strong {
+  font-weight: 700;
+}
+
+/* Any image inserted inline via the Quill editor (not just the cover
+   image) — without this, a screenshot at its native pixel width will
+   blow out the 760px column and drag the whole page into horizontal
+   scroll. This was almost certainly the actual cause of the overlap. */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  margin: 1rem 0;
+  display: block;
+}
+
+/* Belt-and-braces text wrapping — covers any element Quill might
+   output that isn't explicitly listed above (e.g. nested spans from
+   pasted content) */
+.post-content,
+.post-content * {
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
 
 /* ================================
    POST FOOTER

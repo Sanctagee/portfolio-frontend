@@ -316,6 +316,73 @@
   padding-top: 0.5rem;
 }
 
+/* Add these to styles/pages/home.css */
+
+/* ========================
+   SERVICES SECTION
+======================== */
+.services-section {
+  padding: 5rem 0;
+  background: var(--bg-light);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.service-card {
+  padding: 2rem 1.75rem;
+  text-align: left;
+}
+
+.service-icon {
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+.service-card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  color: var(--text-color);
+}
+
+.service-card p {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.services-cta {
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2rem;
+  color: #fff;
+}
+
+.services-cta h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.services-cta p {
+  color: #ccc;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.btn-lg {
+  padding: 0.9rem 2rem;
+  font-size: 1.05rem;
+}
+
+
 /* ========================
    RESPONSIVE
 ======================== */
@@ -358,6 +425,12 @@
   .hero-photo-frame {
     width: 200px;
     height: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-cta {
+    padding: 2rem 1.5rem;
   }
 }
 

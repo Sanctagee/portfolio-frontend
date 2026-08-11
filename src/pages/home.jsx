@@ -12,6 +12,29 @@ function Home() {
 
   const roles = ["Full-Stack Developer", "React Developer", "Node.js Developer", "PostgreSQL & MongoDB Developer"]
 
+  const services = [
+    {
+      icon: "🌐",
+      title: "Full-Stack Web Apps",
+      desc: "Complete web applications built end-to-end — React or plain JS on the frontend, Node.js/Express or Django REST Framework on the backend, PostgreSQL or MongoDB underneath.",
+    },
+    {
+      icon: "💼",
+      title: "Business & Portfolio Websites",
+      desc: "Clean, fast, professional sites for businesses, freelancers, and personal brands — the kind that makes a good first impression and actually converts visitors into inquiries.",
+    },
+    {
+      icon: "🛠️",
+      title: "Website Fixes & Upgrades",
+      desc: "Already have a site that's slow, broken, or outdated? I can debug, optimize, or add new features to an existing codebase without a full rebuild.",
+    },
+    {
+      icon: "🧑‍🏫",
+      title: "Web Dev Training",
+      desc: "One-on-one or small group coaching for beginners — from HTML fundamentals to building real projects, taught the same way I teach at CodeWithGabbyTech Academy.",
+    },
+  ]
+
   useEffect(() => {
     let roleIndex = 0
     let charIndex = 0
@@ -219,6 +242,30 @@ function Home() {
 
           <div className="text-center mt-3">
             <a href="/projects" className="btn btn-primary">View All Projects</a>
+          </div>
+        </div>
+      </section>
+
+      {/* SERVICES / HIRE ME */}
+      <section className="services-section">
+        <div className="container">
+          <h2 className="section-title">What I Can Build For You</h2>
+          <p className="section-subtitle">Services available for freelance and contract work</p>
+
+          <div className="services-grid">
+            {services.map((s) => (
+              <div key={s.title} className="service-card card">
+                <div className="service-icon">{s.icon}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="services-cta">
+            <h3>Have a project in mind?</h3>
+            <p>Tell me what you're building — I'll get back to you within a day.</p>
+            <a href="/contact" className="btn btn-primary btn-lg">Let's Talk →</a>
           </div>
         </div>
       </section>

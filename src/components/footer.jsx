@@ -19,7 +19,7 @@ function Footer() {
             <a href="https://twitter.com/gabby_tech001" target="_blank" rel="noopener noreferrer">
               <FaTwitter size={24} />
             </a>
-            <a href="mailto:tonygabito@gmail.com">
+            <a href="mailto:sanctagee@gmail.com">
               <FaEnvelope size={24} />
             </a>
           </div>

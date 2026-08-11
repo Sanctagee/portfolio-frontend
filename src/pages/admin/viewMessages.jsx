@@ -9,6 +9,11 @@ function ViewMessages() {
   const [selectedMsg, setSelectedMsg] = useState(null)
   const [filter, setFilter] = useState("all")
   const [deleteConfirm, setDeleteConfirm] = useState(null)
+  const [copied, setCopied] = useState(false)
+  const [showReplyForm, setShowReplyForm] = useState(false)
+  const [replyText, setReplyText] = useState("")
+  const [sending, setSending] = useState(false)
+  const [replyFeedback, setReplyFeedback] = useState(null)
 
   useEffect(() => {
     fetchMessages()
@@ -28,7 +33,6 @@ function ViewMessages() {
   const handleMarkRead = async (id) => {
     try {
       await contactAPI.markRead(id)
-      // correct column: contact_read
       setMessages((prev) =>
         prev.map((m) => (m.contact_id === id ? { ...m, contact_read: true } : m))
       )
@@ -53,12 +57,50 @@ function ViewMessages() {
 
   const handleSelectMsg = (msg) => {
     setSelectedMsg(msg)
+    setShowReplyForm(false)
+    setReplyText("")
+    setReplyFeedback(null)
     if (!msg.contact_read) {
       handleMarkRead(msg.contact_id)
     }
   }
 
-  // correct column: contact_read (not is_read)
+  const handleCopyEmail = async (email) => {
+    try {
+      await navigator.clipboard.writeText(email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error("Clipboard copy failed:", err)
+    }
+  }
+
+  const handleSendReply = async () => {
+    if (!replyText.trim() || !selectedMsg) return
+    setSending(true)
+    setReplyFeedback(null)
+    try {
+      const res = await contactAPI.reply(selectedMsg.contact_id, { reply_message: replyText })
+      const updated = res.data.data
+      setMessages((prev) =>
+        prev.map((m) => (m.contact_id === selectedMsg.contact_id ? { ...m, ...updated } : m))
+      )
+      setSelectedMsg((prev) => ({ ...prev, ...updated }))
+      setReplyText("")
+      setShowReplyForm(false)
+      setReplyFeedback({ type: "success", msg: "Reply sent!" })
+    } catch (err) {
+      console.error("Error sending reply:", err)
+      setReplyFeedback({
+        type: "error",
+        msg: err.response?.data?.message || "Failed to send reply. Please try again.",
+      })
+    } finally {
+      setSending(false)
+      setTimeout(() => setReplyFeedback(null), 4000)
+    }
+  }
+
   const filtered = messages.filter((m) => {
     if (filter === "unread") return !m.contact_read
     if (filter === "read") return m.contact_read
@@ -128,7 +170,10 @@ function ViewMessages() {
                         {new Date(msg.contact_date).toLocaleDateString()}
                       </span>
                     </div>
-                    <span className="msg-row-subject">{msg.contact_subject}</span>
+                    <span className="msg-row-subject">
+                      {msg.contact_subject}
+                      {msg.contact_replied && <span className="replied-tag"> · Replied</span>}
+                    </span>
                     <p className="msg-row-preview">
                       {msg.contact_message?.substring(0, 80)}...
                     </p>
@@ -161,28 +206,83 @@ function ViewMessages() {
                   <p>{selectedMsg.contact_message}</p>
                 </div>
 
-                <div className="detail-actions">
-                  <a
-                    href={`mailto:${selectedMsg.contact_email}?subject=Re: ${selectedMsg.contact_subject}`}
-                    className="admin-btn admin-btn-primary"
-                  >
-                    📧 Reply
-                  </a>
-                  {!selectedMsg.contact_read && (
+                {/* Previous reply, if one was already sent */}
+                {selectedMsg.contact_replied && selectedMsg.contact_reply_message && (
+                  <div className="detail-previous-reply">
+                    <span className="previous-reply-label">
+                      ✅ Your reply · {new Date(selectedMsg.contact_replied_at).toLocaleString()}
+                    </span>
+                    <p>{selectedMsg.contact_reply_message}</p>
+                  </div>
+                )}
+
+                {/* Reply feedback banner */}
+                {replyFeedback && (
+                  <div className={`feedback-banner feedback-${replyFeedback.type}`}>
+                    {replyFeedback.type === "success" ? "✅" : "❌"} {replyFeedback.msg}
+                  </div>
+                )}
+
+                {/* Inline reply form */}
+                {showReplyForm ? (
+                  <div className="reply-form">
+                    <textarea
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      placeholder={`Write your reply to ${selectedMsg.contact_name}...`}
+                      rows={5}
+                      autoFocus
+                    />
+                    <div className="reply-form-actions">
+                      <button
+                        className="admin-btn admin-btn-primary"
+                        onClick={handleSendReply}
+                        disabled={sending || !replyText.trim()}
+                      >
+                        {sending ? "Sending..." : "📤 Send Reply"}
+                      </button>
+                      <button
+                        className="admin-btn admin-btn-secondary"
+                        onClick={() => {
+                          setShowReplyForm(false)
+                          setReplyText("")
+                        }}
+                        disabled={sending}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="detail-actions">
+                    <button
+                      className="admin-btn admin-btn-primary"
+                      onClick={() => setShowReplyForm(true)}
+                    >
+                      📧 Reply
+                    </button>
                     <button
                       className="admin-btn admin-btn-secondary"
-                      onClick={() => handleMarkRead(selectedMsg.contact_id)}
+                      onClick={() => handleCopyEmail(selectedMsg.contact_email)}
                     >
-                      ✅ Mark Read
+                      {copied ? "✅ Copied!" : "📋 Copy Email"}
                     </button>
-                  )}
-                  <button
-                    className="admin-btn admin-btn-danger"
-                    onClick={() => setDeleteConfirm(selectedMsg.contact_id)}
-                  >
-                    🗑️ Delete
-                  </button>
-                </div>
+                    {!selectedMsg.contact_read && (
+                      <button
+                        className="admin-btn admin-btn-secondary"
+                        onClick={() => handleMarkRead(selectedMsg.contact_id)}
+                      >
+                        ✅ Mark Read
+                      </button>
+                    )}
+                    <button
+                      className="admin-btn admin-btn-danger"
+                      onClick={() => setDeleteConfirm(selectedMsg.contact_id)}
+                    >
+                      🗑️ Delete
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
               <div className="detail-empty">

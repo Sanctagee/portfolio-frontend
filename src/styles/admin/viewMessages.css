@@ -354,3 +354,61 @@
     max-height: 300px;
   }
 }
+
+/* Added for the reply section of the messages from clients */
+
+.replied-tag {
+  color: #16a34a;
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.detail-previous-reply {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+}
+
+.previous-reply-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #16a34a;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.detail-previous-reply p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.reply-form {
+  margin-top: 1rem;
+}
+
+.reply-form textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  min-height: 120px;
+}
+
+.reply-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.reply-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}

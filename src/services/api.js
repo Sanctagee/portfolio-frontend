@@ -71,6 +71,7 @@ export const contactAPI = {
   send: (data) => api.post("/contact", data),
   getAll: () => api.get("/contact"),
   markRead: (id) => api.put(`/contact/${id}/read`),
+  reply: (id, data) => api.post(`/contact/${id}/reply`, data),
   delete: (id) => api.delete(`/contact/${id}`)
 }
 
